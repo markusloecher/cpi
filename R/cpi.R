@@ -300,9 +300,7 @@ cpi <- function(task, learner,
     }
     cpi <- mean(dif)
     se <- sd(dif) / sqrt(length(dif))
-    #added by Markus
-    dif_stats =c(jarquePval=moments::jarque.test(dif)$p.value, kurtosis=moments::kurtosis(dif), skewness=moments::skewness(dif))
-    
+      
     if (is.null(groups)) {
       res <- data.frame(Variable = task$feature_names[i],
                         CPI = unname(cpi), 
@@ -358,7 +356,14 @@ cpi <- function(task, learner,
     } else {
       stop("Unknown test.")
     }
-    res
+    #attr(res,"dif_stats") = dif_stats
+    #added by Markus
+    #dif_stats =c(jarquePval=moments::jarque.test(dif)$p.value, kurtosis=moments::kurtosis(dif), skewness=moments::skewness(dif))
+    res$jarquePval=moments::jarque.test(dif)$p.value
+    res$kurtosis=moments::kurtosis(dif)
+    res$skewness=moments::skewness(dif)
+    
+    return(res)
   }
   
   # Different return value for Bayesian testing
@@ -392,7 +397,7 @@ cpi <- function(task, learner,
   lgr::get_logger("mlr3")$set_threshold(old_logger_treshold)
   
   # Return CPI for all features/groups
-  attr(ret,"dif_stats") = dif_stats
+  #attr(ret,"dif_stats") = dif_stats
   ret
 }
 
