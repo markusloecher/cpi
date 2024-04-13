@@ -388,6 +388,8 @@ cpi <- function(task, learner,
     ret <- foreach(j = idx, .combine = .combine) %do% cpi_fun(j)
   }
   
+  if (verbose > 1) browser()
+  
   # If group CPI, rename groups
   if (!is.null(groups) & !is.null(names(groups))) {
     ret$Group <- names(groups)
